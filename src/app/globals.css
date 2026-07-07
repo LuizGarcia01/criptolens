@@ -1,0 +1,91 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── CriptoLens Theme Tokens ── */
+:root {
+  --bg: #F7F8FA;
+  --surface: #FFFFFF;
+  --surface-2: #F0F2F7;
+  --border: #DDE2EE;
+  --text-primary: #111827;
+  --text-secondary: #4B5563;
+  --text-muted: #9CA3AF;
+  --accent: #F59E0B;
+  --accent-glow: rgba(245, 158, 11, 0.12);
+  --positive: #059669;
+  --negative: #DC2626;
+  --instructor: #7C3AED;
+  --instructor-bg: #F5F3FF;
+  --instructor-border: #C4B5FD;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #07080F;
+    --surface: #0E1118;
+    --surface-2: #151A25;
+    --border: #1C2436;
+    --text-primary: #F0F4FF;
+    --text-secondary: #8B95AA;
+    --text-muted: #3A4255;
+    --accent: #FBBF24;
+    --accent-glow: rgba(251, 191, 36, 0.1);
+    --positive: #10B981;
+    --negative: #EF4444;
+    --instructor: #A78BFA;
+    --instructor-bg: rgba(167, 139, 250, 0.08);
+    --instructor-border: rgba(167, 139, 250, 0.3);
+  }
+}
+
+[data-theme="light"] {
+  --bg: #F7F8FA;
+  --surface: #FFFFFF;
+  --surface-2: #F0F2F7;
+  --border: #DDE2EE;
+  --text-primary: #111827;
+  --text-secondary: #4B5563;
+  --text-muted: #9CA3AF;
+  --accent: #F59E0B;
+  --accent-glow: rgba(245, 158, 11, 0.12);
+  --positive: #059669;
+  --negative: #DC2626;
+  --instructor: #7C3AED;
+  --instructor-bg: #F5F3FF;
+  --instructor-border: #C4B5FD;
+}
+
+[data-theme="dark"] {
+  --bg: #07080F;
+  --surface: #0E1118;
+  --surface-2: #151A25;
+  --border: #1C2436;
+  --text-primary: #F0F4FF;
+  --text-secondary: #8B95AA;
+  --text-muted: #3A4255;
+  --accent: #FBBF24;
+  --accent-glow: rgba(251, 191, 36, 0.1);
+  --positive: #10B981;
+  --negative: #EF4444;
+  --instructor: #A78BFA;
+  --instructor-bg: rgba(167, 139, 250, 0.08);
+  --instructor-border: rgba(167, 139, 250, 0.3);
+}
+
+html,
+body {
+  background-color: var(--bg);
+  color: var(--text-primary);
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
