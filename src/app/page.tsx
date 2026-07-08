@@ -185,7 +185,9 @@ export default async function HomePage() {
           <p className="text-xs font-bold tracking-wider uppercase text-cl-muted">
             Principais Moedas
           </p>
-          <span className="text-xs text-cl-muted tabular-nums">em USD</span>
+          <Link href="/calculadora" className="text-xs font-semibold" style={{ color: "var(--instructor)" }}>
+            🧮 Calculadora
+          </Link>
         </div>
         <div className="bg-cl-surface border border-cl-border rounded-2xl overflow-hidden">
           {coins.map((coin, i) => {
@@ -196,42 +198,28 @@ export default async function HomePage() {
                 key={coin.id}
                 className={`flex items-center gap-3 px-4 py-3 ${i < coins.length - 1 ? "border-b border-cl-border" : ""}`}
               >
-                {/* Coin image or badge */}
-                <div
-                  className="w-9 h-9 rounded-full flex-shrink-0 overflow-hidden flex items-center justify-center text-sm font-bold text-white"
-                  style={{ background: coin.image ? "transparent" : color }}
-                >
+                {/* Coin image — clicável */}
+                <Link href={`/moeda/${coin.id}`} className="w-9 h-9 rounded-full flex-shrink-0 overflow-hidden flex items-center justify-center text-sm font-bold text-white active:opacity-70"
+                  style={{ background: coin.image ? "transparent" : color }}>
                   {coin.image ? (
-                    <Image
-                      src={coin.image}
-                      alt={coin.name}
-                      width={36}
-                      height={36}
-                      className="rounded-full"
-                      unoptimized
-                    />
+                    <Image src={coin.image} alt={coin.name} width={36} height={36} className="rounded-full" unoptimized />
                   ) : (
                     coin.symbol.slice(0, 1).toUpperCase()
                   )}
-                </div>
+                </Link>
 
-                {/* Name */}
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold text-cl-primary uppercase">
-                    {coin.symbol}
-                  </p>
+                {/* Name — clicável */}
+                <Link href={`/moeda/${coin.id}`} className="flex-1 min-w-0 active:opacity-70">
+                  <p className="text-sm font-semibold text-cl-primary uppercase">{coin.symbol}</p>
                   <p className="text-xs text-cl-muted truncate">{coin.name}</p>
-                </div>
+                </Link>
 
                 {/* Price + change */}
                 <div className="text-right">
                   <p className="text-sm font-semibold text-cl-primary tabular-nums font-mono">
                     {formatPrice(coin.current_price)}
                   </p>
-                  <p
-                    className="text-xs font-semibold tabular-nums"
-                    style={{ color: change >= 0 ? "var(--positive)" : "var(--negative)" }}
-                  >
+                  <p className="text-xs font-semibold tabular-nums" style={{ color: change >= 0 ? "var(--positive)" : "var(--negative)" }}>
                     {change >= 0 ? "+" : ""}{change.toFixed(2)}%
                   </p>
                 </div>
@@ -239,9 +227,8 @@ export default async function HomePage() {
                 {/* Contextual ask button */}
                 <Link
                   href={askInstrutor(`O ${coin.name} está ${change >= 0 ? "subindo" : "caindo"} ${Math.abs(change).toFixed(1)}% hoje e vale ${formatPrice(coin.current_price)}. O que pode estar causando isso e o que esse movimento significa?`)}
-                  className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold transition-opacity hover:opacity-100 opacity-50"
+                  className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold opacity-50"
                   style={{ background: "var(--instructor-bg)", color: "var(--instructor)", border: "1px solid var(--instructor-border)" }}
-                  title={`Perguntar sobre ${coin.name}`}
                 >
                   ?
                 </Link>

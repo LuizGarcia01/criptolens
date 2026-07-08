@@ -16,6 +16,19 @@ export interface CoinMarket {
   total_volume: number;
 }
 
+export async function getCoinById(coinId: string): Promise<CoinMarket | null> {
+  const params = new URLSearchParams({
+    vs_currency: "usd", ids: coinId, sparkline: "false",
+    price_change_percentage: "24h",
+  });
+  const res = await fetch(`${BASE_URL}/coins/markets?${params}`, {
+    headers: getHeaders(), next: { revalidate: 60 },
+  });
+  if (!res.ok) return null;
+  const data = await res.json();
+  return data[0] ?? null;
+}
+
 export async function getTopCoins(limit = 10): Promise<CoinMarket[]> {
   const params = new URLSearchParams({
     vs_currency: "usd",
