@@ -3,6 +3,7 @@ import Link from "next/link";
 import ThemeToggle from "@/components/ui/ThemeToggle";
 import MissaoDoDia from "@/components/ui/MissaoDoDia";
 import Onboarding from "@/components/ui/Onboarding";
+import PWAInstall from "@/components/ui/PWAInstall";
 
 function askInstrutor(question: string) {
   return `/chat?q=${encodeURIComponent(question)}`;
@@ -123,6 +124,9 @@ export default async function HomePage() {
           </svg>
         </Link>
       </div>
+
+      {/* PWA Install */}
+      <PWAInstall />
 
       {/* Missão do dia */}
       <MissaoDoDia fearGreedValue={fearGreed.value} fearGreedLabel={fgLabel} />
