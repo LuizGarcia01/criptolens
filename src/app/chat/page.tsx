@@ -8,6 +8,14 @@ interface Message {
   streaming?: boolean;
 }
 
+interface MarketContext {
+  fearGreed: number;
+  fearGreedLabel: string;
+  coins: Array<{ name: string; symbol: string; price: number; change24h: number }>;
+  newsHeadlines: string[];
+  fetchedAt: string;
+}
+
 const STARTERS = [
   "O que é Bitcoin e por que ele é importante?",
   "Como funciona o Fear & Greed Index?",
@@ -34,8 +42,17 @@ export default function ChatPage() {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [apiKeyMissing, setApiKeyMissing] = useState(false);
+  const [marketContext, setMarketContext] = useState<MarketContext | null>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // Fetch real-time market context once on mount
+  useEffect(() => {
+    fetch("/api/market-context")
+      .then((r) => r.ok ? r.json() : null)
+      .then((data) => { if (data) setMarketContext(data); })
+      .catch(() => {});
+  }, []);
 
   // Pre-fill from URL param (e.g. ?q=...)
   useEffect(() => {
@@ -75,7 +92,7 @@ export default function ChatPage() {
       const res = await fetch("/api/instrutor", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: apiMessages }),
+        body: JSON.stringify({ messages: apiMessages, marketContext }),
       });
 
       if (res.status === 503) {

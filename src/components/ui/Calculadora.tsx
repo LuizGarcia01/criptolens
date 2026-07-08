@@ -13,10 +13,18 @@ function fmtPrice(n: number) {
 export default function Calculadora({ coins }: { coins: CoinMarket[] }) {
   const [coinId, setCoinId] = useState(coins[0]?.id ?? "bitcoin");
   const [qty, setQty] = useState("");
-  const [buyPrice, setBuyPrice] = useState("");
+  const [buyPrice, setBuyPrice] = useState(
+    coins[0]?.current_price ? coins[0].current_price.toString() : ""
+  );
 
   const coin = coins.find((c) => c.id === coinId);
   const currentPrice = coin?.current_price ?? 0;
+
+  function handleCoinChange(newId: string) {
+    setCoinId(newId);
+    const newCoin = coins.find((c) => c.id === newId);
+    if (newCoin) setBuyPrice(newCoin.current_price.toString());
+  }
   const qtyNum = parseFloat(qty) || 0;
   const buyNum = parseFloat(buyPrice) || 0;
 
@@ -47,7 +55,7 @@ export default function Calculadora({ coins }: { coins: CoinMarket[] }) {
           <label className="text-xs font-bold text-cl-muted uppercase tracking-wider block mb-1.5">Moeda</label>
           <select
             value={coinId}
-            onChange={(e) => setCoinId(e.target.value)}
+            onChange={(e) => handleCoinChange(e.target.value)}
             className="w-full rounded-xl px-3 py-2.5 text-sm font-semibold text-cl-primary border border-cl-border"
             style={{ background: "var(--surface-2)" }}
           >
