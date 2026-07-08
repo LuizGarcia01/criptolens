@@ -7,8 +7,9 @@ export interface NormalizedNews {
 }
 
 const RSS_FEEDS = [
-  { url: "https://cointelegraph.com/rss", source: "Cointelegraph" },
-  { url: "https://decrypt.co/feed", source: "Decrypt" },
+  { url: "https://br.cointelegraph.com/rss", source: "Cointelegraph BR" },
+  { url: "https://livecoins.com.br/feed/", source: "Livecoins" },
+  { url: "https://portaldobitcoin.uol.com.br/feed/", source: "Portal do Bitcoin" },
 ];
 
 export async function getCryptoNews(limit = 5): Promise<NormalizedNews[]> {
@@ -91,8 +92,18 @@ function parseTimeToSort(time: string): number {
 
 function detectSentiment(title: string): "bullish" | "bearish" | "neutral" {
   const t = title.toLowerCase();
-  const bearish = ["hack", "exploit", "crash", "ban", "lawsuit", "scam", "bear", "fall", "drop", "lose", "lost", "warning", "collapse", "fraud", "stolen", "phishing", "attack"];
-  const bullish = ["bull", "rise", "gain", "ath", "record", "launch", "adoption", "approve", "etf", "surge", "rally", "high", "growth", "buy", "soar", "breakthrough", "milestone"];
+  const bearish = [
+    // English
+    "hack", "exploit", "crash", "ban", "lawsuit", "scam", "bear", "fall", "drop", "lose", "lost", "warning", "collapse", "fraud", "stolen", "phishing", "attack",
+    // Português
+    "queda", "cai", "caiu", "baixa", "golpe", "fraude", "hack", "proibição", "processo", "colapso", "perda", "alerta", "risco", "investigação", "multa", "banido",
+  ];
+  const bullish = [
+    // English
+    "bull", "rise", "gain", "ath", "record", "launch", "adoption", "approve", "etf", "surge", "rally", "high", "growth", "buy", "soar", "breakthrough", "milestone",
+    // Português
+    "alta", "sobe", "subiu", "recorde", "aprovação", "adoção", "lançamento", "crescimento", "máxima", "valoriza", "recupera", "aprovado", "novo recorde", "histórico",
+  ];
   const b = bearish.some((w) => t.includes(w));
   const u = bullish.some((w) => t.includes(w));
   if (b && !u) return "bearish";

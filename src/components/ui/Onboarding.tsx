@@ -69,7 +69,7 @@ export default function Onboarding() {
   return (
     <div
       className="fixed inset-0 z-50 flex flex-col"
-      style={{ background: "var(--background)" }}
+      style={{ background: "var(--bg)" }}
     >
       {/* Skip */}
       <div className="flex justify-end p-4 pt-safe">
