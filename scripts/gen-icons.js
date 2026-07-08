@@ -2,7 +2,6 @@ const zlib = require("zlib");
 const fs = require("fs");
 const path = require("path");
 
-// CRC32 table
 const crcTable = (() => {
   const t = new Uint32Array(256);
   for (let n = 0; n < 256; n++) {
@@ -28,46 +27,29 @@ function chunk(type, data) {
   return Buffer.concat([len, t, data, crcBuf]);
 }
 
-function makePNG(size) {
+// Solid RGB PNG — simpler and guaranteed valid for Chrome PWA
+function makeSolidPNG(size, r, g, b) {
   const sig = Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]);
 
-  // IHDR
   const ihdr = Buffer.alloc(13);
   ihdr.writeUInt32BE(size, 0);
   ihdr.writeUInt32BE(size, 4);
   ihdr[8] = 8; // bit depth
-  ihdr[9] = 6; // RGBA
+  ihdr[9] = 2; // color type RGB (no alpha — simpler, always valid)
 
-  // Draw icon: purple rounded-square bg + golden ₿ area
-  const raw = Buffer.alloc(size * (1 + size * 4));
-  const cx = size / 2;
-  const cy = size / 2;
-  const r = size * 0.42; // circle radius
-
+  const rowSize = 1 + size * 3;
+  const raw = Buffer.alloc(size * rowSize);
   for (let y = 0; y < size; y++) {
-    const row = y * (1 + size * 4);
-    raw[row] = 0; // filter: None
+    const off = y * rowSize;
+    raw[off] = 0; // filter: None
     for (let x = 0; x < size; x++) {
-      const px = row + 1 + x * 4;
-      const dx = x - cx;
-      const dy = y - cy;
-      const dist = Math.sqrt(dx * dx + dy * dy);
-
-      if (dist <= r) {
-        // Purple-to-indigo gradient
-        const t = (x + y) / (size * 2);
-        raw[px]     = Math.round(124 + t * (79 - 124)); // R: #7C3AED → #4F46E5
-        raw[px + 1] = Math.round(58  + t * (70 - 58));  // G
-        raw[px + 2] = Math.round(237 + t * (229 - 237)); // B
-        raw[px + 3] = 255; // A opaque
-      } else {
-        // Transparent outside circle
-        raw[px] = raw[px + 1] = raw[px + 2] = raw[px + 3] = 0;
-      }
+      raw[off + 1 + x * 3] = r;
+      raw[off + 2 + x * 3] = g;
+      raw[off + 3 + x * 3] = b;
     }
   }
 
-  const idat = zlib.deflateSync(raw);
+  const idat = zlib.deflateSync(raw, { level: 9 });
 
   return Buffer.concat([
     sig,
@@ -80,7 +62,12 @@ function makePNG(size) {
 const iconsDir = path.join(__dirname, "..", "public", "icons");
 if (!fs.existsSync(iconsDir)) fs.mkdirSync(iconsDir, { recursive: true });
 
-fs.writeFileSync(path.join(iconsDir, "icon-192.png"), makePNG(192));
-fs.writeFileSync(path.join(iconsDir, "icon-512.png"), makePNG(512));
+// Purple #7C3AED = rgb(124, 58, 237)
+const png192 = makeSolidPNG(192, 124, 58, 237);
+const png512 = makeSolidPNG(512, 124, 58, 237);
 
-console.log("✅ PWA icons generated: icon-192.png, icon-512.png");
+fs.writeFileSync(path.join(iconsDir, "icon-192.png"), png192);
+fs.writeFileSync(path.join(iconsDir, "icon-512.png"), png512);
+
+console.log(`✅ icon-192.png (${png192.length} bytes)`);
+console.log(`✅ icon-512.png (${png512.length} bytes)`);
