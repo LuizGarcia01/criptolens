@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import BottomNav from "@/components/ui/BottomNav";
+import ServiceWorker from "@/components/ui/ServiceWorker";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -45,6 +46,7 @@ export default function RootLayout({
         />
       </head>
       <body className={`${inter.variable} font-sans antialiased`}>
+        <ServiceWorker />
         <main className="min-h-screen pb-20">{children}</main>
         <BottomNav />
       </body>
